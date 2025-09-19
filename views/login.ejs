@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log-in</title>
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <form action="/log-in" method="POST">
+      <label for="username">
+        Enter Username:
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="John Smith"
+          required
+        />
+      </label>
+      <label for="password">
+        Enter Password:
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required 
+        />
+      </label>
+      <button type="submit" id="loginButton">Login</button>
+    </form>
+    <%- include("partials/footer") %>
+  </body>
+</html>

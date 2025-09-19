@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign-up</title>
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <form action="/sign-up" method="POST">
+      <label for="email">
+        Email:
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="example@gmail.com"
+          required
+        />
+      </label>
+      <label for="name">
+        Name:
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="John Smith"
+          required
+        />
+      </label>
+      <label for="password">
+        Password:
+        <input type="password" id="password" name="password" required />
+      </label>
+      <label for="confirmPassword">
+        Confirm Password:
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          required
+        />
+      </label>
+      <button type="submit" id="signupButton">Submit</button>
+    </form>
+    <%- include("partials/footer") %>
+  </body>
+</html>
