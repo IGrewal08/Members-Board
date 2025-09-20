@@ -7,7 +7,7 @@ CREATE EXTENSION citext;
 CREATE TABLE IF NOT EXISTS users (
 userId INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 email citext UNIQUE NOT NULL,
-name VARCHAR(100) NOT NULL,
+username VARCHAR(100) NOT NULL,
 password VARCHAR(100) NOT NULL,
 isAdmin BOOLEAN DEFAULT FALSE
 );
@@ -38,7 +38,7 @@ PRIMARY KEY (userId, postId)
 `;
 
 const seed = `
-INSERT INTO users (email, name, password, isAdmin) VALUES ('example@gmail.com', 'John Smith', '1234', true);
+INSERT INTO users (email, username, password, isAdmin) VALUES ('example@gmail.com', 'John Smith', '1234', true);
 INSERT INTO posts (userId, title, description, likes) VALUES (1, 'Sample Title', 'This is the sample description for this sample post', 1);
 INSERT INTO comments (userId, comment) VALUES (1, 'This is the sample comment on the sample post');
 INSERT INTO post_likes (userId, postId) VALUES (1, 1);
@@ -47,12 +47,12 @@ INSERT INTO post_likes (userId, postId) VALUES (1, 1);
 async function main() {
   console.log("Seeding...");
   const client = new Client({
-    connectionString: `postgresql://${process.env.ROLE_NAME}@localhost:${process.env.PORT}/${process.env.DATABASE_NAME}`,
+    connectionString: `postgresql://${process.env.ROLE_NAME}@localhost:5432/${process.env.DATABASE_NAME}`,
   });
   await client.connect();
-  client.query(create_tables);
-  client.query(seed);
-  client.end();
+  await client.query(create_tables);
+  await client.query(seed);
+  await client.end();
   console.log("Seeding Complete");
 }
 main();

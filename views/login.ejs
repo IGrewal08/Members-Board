@@ -7,7 +7,7 @@
   </head>
   <body>
     <%- include("partials/header") %>
-    <form action="/log-in" method="POST">
+    <form action="/login" method="POST">
       <label for="username">
         Enter Username:
         <input
@@ -20,12 +20,7 @@
       </label>
       <label for="password">
         Enter Password:
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
-          required 
-        />
+        <input type="password" id="password" name="password" required />
       </label>
       <button type="submit" id="loginButton">Login</button>
     </form>

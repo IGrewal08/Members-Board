@@ -1,35 +1,50 @@
 import express from "express";
-import { fileURLToPath } from "node:path";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 import session from "express-session";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import pgSimple from "connect-pg-simple";
+import connectPgSimple from "connect-pg-simple";
+import passport from "./config/passport.config.js";
+import "dotenv/config";
+import pool from './config/db.config.js';
 
 import homeRouter from "./routes/home.routes.js";
 import loginRouter from "./routes/login.routes.js";
 import signupRouter from "./routes/signup.routes.js"
 
 const app = express();
-const pgSession = pgSimple(session);                        // store session data
+const pgStore = connectPgSimple(session);                        // store session data
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.__dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(session({ 
-    secret: "sample", 
-    resave: false, 
-    saveUninitialized: false 
-}));
-app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/log-in", loginRouter());
-app.use("/sign-up", signupRouter());
-app.use("/", homeRouter());
+app.use(session({ 
+    secret: "sample", 
+    resave: false, 
+    saveUninitialized: true,
+    store: new pgStore({
+      pool: pool,
+      tableName: process.env.SESSION_NAME,
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    }
+}));
+
+app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log(req.user);
+  res.locals.currentUser = req.user;
+  next();
+});
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter);
+app.use("/", homeRouter);
 
 app.listen(3000, "localhost", (error) => {
   if (error) {

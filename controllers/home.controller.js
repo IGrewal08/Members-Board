@@ -1,10 +1,10 @@
-import { ExpressValidator, validationResult } from "express-validator";
+import { body, query, validationResult } from "express-validator";
 
 export const getHome = async (req, res) => {
+    //console.log(req.headers);
     try {
-        res.render("index.ejs", {
-            title: "",
-            posts: "",
+        res.render("index", {
+            title: "Home",
         });
     } catch (error) {
         console.error("Error in getHome controller: ", error);

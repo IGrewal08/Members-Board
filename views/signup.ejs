@@ -7,7 +7,7 @@
   </head>
   <body>
     <%- include("partials/header") %>
-    <form action="/sign-up" method="POST">
+    <form action="/signup" method="POST">
       <label for="email">
         Email:
         <input
@@ -18,12 +18,12 @@
           required
         />
       </label>
-      <label for="name">
-        Name:
+      <label for="username">
+        Username:
         <input
           type="text"
-          id="name"
-          name="name"
+          id="username"
+          name="username"
           placeholder="John Smith"
           required
         />
