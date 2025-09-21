@@ -3,46 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/form.css" />
     <title>Sign-up</title>
   </head>
   <body>
-    <%- include("partials/header") %>
-    <form action="/signup" method="POST">
-      <label for="email">
-        Email:
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="example@gmail.com"
-          required
-        />
-      </label>
-      <label for="username">
-        Username:
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="John Smith"
-          required
-        />
-      </label>
-      <label for="password">
-        Password:
-        <input type="password" id="password" name="password" required />
-      </label>
-      <label for="confirmPassword">
-        Confirm Password:
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          required
-        />
-      </label>
-      <button type="submit" id="signupButton">Submit</button>
-    </form>
+    <header>
+      <a href="/" id="logo"> MEMBERS </a>
+      <% if (!locals.currentUser) { %>
+      <div id="accountStatus">
+        <a href="/login" id="loginButton">Login</a>
+        <a href="/signup" id="loginButton">Create An Account</a>
+      </div>
+      <% } else { %>
+      <div id="accountStatus">
+        <div>Hello, <%= locals.currentUser.username %>!</div>
+        <a href="/logout" id="logoutButton">Logout</a>
+      </div>
+      <% } %>
+    </header>
+    <main>
+      <form action="/signup" method="POST">
+        <h1>Create A New Account</h1>
+        <label for="email">
+          Email<br />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="example@gmail.com"
+            required
+          />
+        </label>
+        <label for="username">
+          Username<br />
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="John Smith"
+            required
+          />
+        </label>
+        <label for="password">
+          Password<br />
+          <input type="password" id="password" name="password" required />
+        </label>
+        <label for="confirmPassword">
+          Confirm Password<br />
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+          />
+        </label>
+        <button type="submit" id="loginButton_">Submit</button>
+      </form>
+      <div id="formDesc">
+        <h1 id="logoDesc">MEMBERS</h1>
+        <h1>
+          Already Have An Account?<br />
+          <span id="signupDesc"> Click <a href="/login">Here</a> </span>
+        </h1>
+      </div>
+    </main>
     <%- include("partials/footer") %>
   </body>
 </html>

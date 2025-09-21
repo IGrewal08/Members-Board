@@ -4,22 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
     <title>Home</title>
   </head>
   <body>
     <%- include("partials/header") %>
-    <div id="sidebar">
-      <div>
-        <a>Today</a>
-        <a>New</a>
-        <a>Trending</a>
-        <a>Most-Liked</a>
+    <main id="indexMain">
+      <nav>
+        <div id="time">Last Update: TIME</div>
+        <a href="#" id="newPost">+ post</a>
+      </nav>
+      <div id="sidebar">
+        <div id="sidebarMainLinks">
+          <a>Home</a>
+          <a>Today</a>
+          <a>New</a>
+          <a>Most-Liked</a>
+        </div>
+        <div>Liked Posts here</div>
+        <div>My Posts here</div>
+        <div>Upgrade Membership</div>
       </div>
-      <div>Liked Posts here</div>
-      <div>My Posts here</div>
-      <div>Upgrade Membership</div>
-    </div>
-    <main>All posts here</main>
+      <div id="content">sample text...</div>
+    </main>
     <%- include("partials/footer") %>
   </body>
 </html>

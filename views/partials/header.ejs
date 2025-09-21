@@ -1,10 +1,9 @@
 <header>
     <a href="/" id="logo">
-        Title
+        MEMBERS
     </a>
     <form action="" method="POST">
         <label for="search">
-            Search:
             <input
             type="text"
             id="search"
@@ -12,11 +11,17 @@
             placeholder="search query..."
             />
         </label>
-        <button type="submit">Search</button>
+        <button type="submit" id="searchButton">Search</button>
     </form>
-    <%# When userId, (signed in) show account name and a logout button %>
-    <div>
-        <a href="/login">Login</a>
-        <a href="/signup">Create a Account</a>  
-    </div>
+    <% if (!locals.currentUser) { %>
+        <div id="accountStatus">
+            <a href="/login" id="loginButton">Login</a>
+            <a href="/signup" id="loginButton">Create An Account</a>  
+        </div>
+    <% } else { %>
+        <div id="accountStatus">
+            <div>Hello, <%= locals.currentUser.username %>!</div>
+            <a href="/logout" id="logoutButton">Logout</a>
+        </div>
+    <% } %>
 </header>

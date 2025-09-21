@@ -44,6 +44,7 @@ signupRouter.post("/", [validateSignup, async (req, res, next) => {
     res.redirect("/")
   } catch (error) {
     console.error(error);
+    /* go to error handler if user is trying to insert a already used email for a pre-existing username in the table (email and username must be unique)*/
     next(error);
   }
 }]);
