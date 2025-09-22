@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/form.css" />
+    <title>New Post</title>
+  </head>
+  <body>
+    <%- include("partials/header") %>
+    <main>
+      <form action="/post/create" method="POST">
+        <label for="title">
+          Title<br />
+          <input type="text" id="title" name="title" maxlength="100" required />
+        </label>
+        <label for="description">
+          Description<br />
+          <textarea
+            id="description"
+            name="description"
+            minlength="2"
+            maxlength="500"
+            rows="10"
+            cols="50"
+            placeholder="500 word limit..."
+            required
+          ></textarea>
+        </label>
+        <button type="submit" id="loginButton_">Submit</button>
+      </form>
+    </main>
+    <%- include("partials/footer") %>
+  </body>
+</html>

@@ -5,27 +5,30 @@ import bcrypt from "bcryptjs";
 
 const signupRouter = Router();
 const validateSignup = [
-  body('email')
+  body("email")
     .isEmail()
     .notEmpty()
-    .withMessage('Must be a valid email address!'),
-  body('username')
+    .withMessage("Must be a valid email address!"),
+  body("username")
     .notEmpty()
     .isString()
     .isLength({ min: 2 })
-    .withMessage('Username must be at least 2 characters long'),
-  body('password')
+    .withMessage("Username must be at least 2 characters long"),
+  body("password")
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
-  body('password')
+    .withMessage("Password must be at least 8 characters long"),
+  body("password")
     .matches(/[A-Z]/)
-    .withMessage('Password must contain at least one uppercase letter'),
-  body('password')
+    .withMessage("Password must contain at least one uppercase letter"),
+  body("password")
     .matches(/[0-9]/)
-    .withMessage('Password must contain at least one number'),
-  body('password')
+    .withMessage("Password must contain at least one number"),
+  body("password")
     .matches(/[\W_]/)
-    .withMessage('Password must contain at least one special character'),
+    .withMessage("Password must contain at least one special character"),
+  body("confirmPassword")
+    .custom((value, { req }) => { return value === req.body.password })
+    .withMessage("Confirm Password and Password do not match"),
 ];
 
 signupRouter.get("/", (req, res) => res.render("signup"));
@@ -34,8 +37,8 @@ signupRouter.post("/", [validateSignup, async (req, res, next) => {
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors);
-      return res.status(400).render("index", {
-        errors: errors.array(),
+      return res.status(400).render("signup", {
+        errors: errors.array(),             /* TAKE THIS ARRAY AND DISPLAY ERROR MESSAGES NEXT TO INPUT */
       });
     }
   try {

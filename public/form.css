@@ -33,6 +33,27 @@ main > form > label > input:focus {
   border-color: var(--focus-border-color);
 }
 
+main > form > label > textarea:focus {
+  outline: none;
+  box-shadow: 0 0 4px 1px var(--focus-border-color);
+  border-color: var(--focus-border-color);
+}
+
+#title {
+  min-width: 20rem;
+  margin: 0.5rem;
+}
+
+textarea {
+  margin: 0.5rem;
+  background-color: var(--header-footer-ccolor);
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  max-height: 10rem;
+  resize: vertical;
+}
+
 #loginButton_ {
   font-size: 20px;
   padding: 0.5rem;

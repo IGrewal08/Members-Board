@@ -10,6 +10,7 @@ import pool from "./config/db.config.js";
 import homeRouter from "./routes/home.routes.js";
 import loginRouter from "./routes/login.routes.js";
 import signupRouter from "./routes/signup.routes.js";
+import { error } from "node:console";
 
 const app = express();
 const pgStore = connectPgSimple(session);
@@ -41,7 +42,6 @@ app.use(
 app.use(passport.session());
 
 app.use((req, res, next) => {
-  console.log(req.user);
   res.locals.currentUser = req.user;
   next();
 });
@@ -57,6 +57,11 @@ app.get("/logout", (req, res, next) => {
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/", homeRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Error 500');
+});
 
 app.listen(3000, "localhost", (error) => {
   if (error) {

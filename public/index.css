@@ -11,6 +11,7 @@
   --outline-color: #313131bc;
   --button-hover-color: #757575;
   --logout-hover-bgcolor: #ff59009d;
+  --like-selected-color: #e20000ec;
   --main-border-color: #67676787;
   --focus-border-color: #007bff;
   --login-hover-bgcolor: #007bff9d;
@@ -185,6 +186,17 @@ nav {
   grid-area: 2 2 / 3 3;
   border: 1px solid var(--main-border-color);
   border-radius: 0 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#post_content {
+  grid-row: 1 / 3;
+  grid-area: 2 1 / 3 3;
+  border: 1px solid var(--main-border-color);
+  border-radius: 0 1rem 1rem 0;
+  display: flex;
+  flex-direction: column;
 }
 
 #contentError {
@@ -206,11 +218,15 @@ nav {
   align-items: center;
 }
 
-#sidebarMainLinks > a:hover {
+#sidebarMainLinks > a:hover,
+#sidebarMainLinks > svg:hover {
   text-decoration: underline;
+  stroke: var(--login-hover-bgcolor);
+  color: var(--focus-border-color);
 }
 
-#time {
+#time,
+h6 {
   font-family: var(--digital-font);
   color: var(--main-border-color);
 }
@@ -222,6 +238,54 @@ nav {
 #signinMess {
   font-size: 10px;
   color: var(--main-border-color);
+}
+
+.posts {
+  font-size: 10px;
+  background-color: var(--login-hover-bgcolor);
+  color: var(--header-footer-ccolor);
+  border: 1px solid var(--main-border-color);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-wrap: wrap;
+}
+
+.posts:hover {
+  background-color: var(--header-footer-ccolor);
+  color: var(--header-footer-bgcolor);
+}
+
+.query_posts {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--search-bar-bgcolor);
+}
+
+.query_posts:hover {
+  box-shadow: 0 0 5px var(--focus-border-color);
+}
+
+.post_info {
+  padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.inv_info_container {
+  display: flex;
+  gap: 1rem;
+}
+
+.inv_info {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inv_info > svg {
+  width: 1.5rem;
+  height: auto;
 }
 
 #myStatus {
