@@ -2,17 +2,6 @@
     <a href="/" id="logo">
         MEMBERS
     </a>
-    <form action="" method="POST">
-        <label for="search">
-            <input
-            type="text"
-            id="search"
-            name="search"
-            placeholder="search post..."
-            />
-        </label>
-        <button type="submit" id="searchButton">Search</button>
-    </form>
     <% if (!locals.currentUser) { %>
         <div id="accountStatus">
             <a href="/login" id="loginButton">Login</a>

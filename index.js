@@ -10,7 +10,7 @@ import pool from "./config/db.config.js";
 import homeRouter from "./routes/home.routes.js";
 import loginRouter from "./routes/login.routes.js";
 import signupRouter from "./routes/signup.routes.js";
-import { error } from "node:console";
+import upgradeRouter from "./routes/upgrade.routes.js";
 
 const app = express();
 const pgStore = connectPgSimple(session);
@@ -56,6 +56,7 @@ app.get("/logout", (req, res, next) => {
 });
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
+app.use("/upgrade", upgradeRouter);
 app.use("/", homeRouter);
 
 app.use((err, req, res, next) => {

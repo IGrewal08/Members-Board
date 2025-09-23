@@ -23,26 +23,36 @@ const validateComment = [
 ];
 
 export const getHome = async (req, res) => {
-  const likedPosts = await pool.query(
-    `SELECT postid, title FROM posts
+  let likedPosts = [];
+  let myPosts = [];
+  if (res.locals.currentUser) {
+    const likedPostsResponse = await pool.query(
+      `SELECT postid, title FROM posts
     WHERE postid = (SELECT postid FROM post_likes WHERE userid = $1);`,
-    [res.locals.currentUser.userid]
-  );
-  const myPosts = await pool.query(
-    "SELECT postid, title FROM posts WHERE userid = $1;",
-    [res.locals.currentUser.userid]
-  );
-  const query =
-    await pool.query(`SELECT posts.userid, postid, COALESCE(COUNT(commentid), 0) as num_of_comments, title, description, likes, posts.date_created as date_created
+      [res.locals.currentUser.userid]
+    );
+    likedPosts = likedPostsResponse.rows;
+    const myPostsResponse = await pool.query(
+      "SELECT postid, title FROM posts WHERE userid = $1;",
+      [res.locals.currentUser.userid]
+    );
+    myPosts = myPostsResponse.rows;
+  }
+  let baseQuery = `
+    SELECT posts.userid, postid, COALESCE(COUNT(commentid), 0) as num_of_comments, title, description, likes, posts.date_created as date_created
     FROM posts
     LEFT JOIN comments USING (postid)
-    GROUP BY postid;`);
-  //console.log(req.headers);
+    GROUP BY postid
+    `;
+  if (req.query.sort === "popular") { baseQuery += " ORDER BY num_of_comments DESC" }
+  else if (req.query.sort === "new") { baseQuery += " ORDER BY date_created DESC" }
+  else if (req.query.sort === "ml") { baseQuery += " ORDER BY likes DESC"}
+  const query = await pool.query(baseQuery);
   const now = new Date();
   try {
     res.render("index", {
-      likedPosts: likedPosts.rows,
-      myPosts: myPosts.rows,
+      likedPosts: likedPosts,
+      myPosts: myPosts,
       query: query.rows,
       time: `${
         now.getMonth() + 1
@@ -81,45 +91,6 @@ export const postPostForm = [
   },
 ];
 
-export const getPost = async (req, res) => {
-  const likedPosts = await pool.query(
-    `SELECT postid, title FROM posts
-    WHERE postid = (SELECT postid FROM post_likes WHERE userid = $1);`,
-    [res.locals.currentUser.userid]
-  );
-  const myPosts = await pool.query(
-    "SELECT postid, title FROM posts WHERE userid = $1;",
-    [res.locals.currentUser.userid]
-  );
-  const mainPost = await pool.query(
-    `
-    SELECT postid, userid, username, title, description, likes, date_created
-    FROM posts
-    JOIN users USING (userid)
-    WHERE postid = $1;
-    `,
-    [req.params.id]
-  );
-  const comments = await pool.query(
-    `
-    SELECT userid, username, comment FROM comments 
-    JOIN users USING (userid)
-    WHERE postid = $1;
-    `,
-    [req.params.id]
-  );
-  try {
-    res.render("post", {
-      likedPosts: likedPosts.rows,
-      myPosts: myPosts.rows,
-      post: mainPost.rows[0],
-      comments: comments.rows,
-    });
-  } catch (error) {
-    console.error("Error in getPost controller: ", error);
-  }
-};
-
 export const postComment = [
   validateComment,
   async (req, res, next) => {
@@ -138,12 +109,6 @@ export const postComment = [
         `,
         [res.locals.currentUser.userid, req.params.id, req.body.addComment]
       );
-      await pool.query(
-        `
-        INSERT INTO post_likes (userid, postid) VALUES ($1, $2)
-        `,
-        [res.locals.currentUser.userid, req.params.id]
-      );
       res.redirect(`/post/${req.params.id}`);
     } catch (error) {
       console.error(error);
@@ -151,3 +116,89 @@ export const postComment = [
     }
   },
 ];
+
+export const getLike = async (req, res, next) => {
+  const postId = req.params.id;
+  const condition = req.params.condition;
+  try {
+    if (condition === "T") {
+      await pool.query(
+        `
+        DELETE FROM post_likes WHERE userid = $1 AND postid = $2
+        `,
+        [res.locals.currentUser.userid, postId]
+      );
+      await pool.query("UPDATE posts SET likes = likes - 1 WHERE postid = $1", [
+        postId,
+      ]);
+    } else if (condition === "F") {
+      await pool.query(
+        `
+        INSERT INTO post_likes (userid, postid) VALUES ($1, $2)
+        `,
+        [res.locals.currentUser.userid, postId]
+      );
+      await pool.query("UPDATE posts SET likes = likes + 1 WHERE postid = $1", [
+        postId,
+      ]);
+    } else {
+      console.error("Invalid condition");
+    }
+    res.redirect(`/post/${postId}`);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export const getPost = async (req, res) => {
+  let likedPosts = [];
+  let myPosts = [];
+  if (res.locals.currentUser) {
+    const likedPostsResponse = await pool.query(
+      `SELECT postid, title FROM posts
+    WHERE postid = (SELECT postid FROM post_likes WHERE userid = $1);`,
+      [res.locals.currentUser.userid]
+    );
+    likedPosts = likedPostsResponse.rows;
+    const myPostsResponse = await pool.query(
+      "SELECT postid, title FROM posts WHERE userid = $1;",
+      [res.locals.currentUser.userid]
+    );
+    myPosts = myPostsResponse.rows;
+  }
+  const mainPost = await pool.query(
+    `
+    SELECT postid, userid, username, title, description, likes, date_created
+    FROM posts
+    JOIN users USING (userid)
+    WHERE postid = $1;
+    `,
+    [req.params.id]
+  );
+  const comments = await pool.query(
+    `
+    SELECT userid, username, comment, date_created FROM comments 
+    JOIN users USING (userid)
+    WHERE postid = $1;
+    `,
+    [req.params.id]
+  );
+  const likeValidationResponse = await pool.query(
+      `SELECT * FROM post_likes WHERE userid = $1 AND postid = $2
+    `,
+      [res.locals.currentUser.userid, req.params.id]
+    );
+  const condition = (likeValidationResponse != undefined && likeValidationResponse.rows.length != 0) ? "T" : "F";
+  try {
+    res.render("post", {
+      condition: condition,
+      likedPosts: likedPosts,
+      myPosts: myPosts,
+      post: mainPost.rows[0],
+      comments: comments.rows,
+    });
+  } catch (error) {
+    console.error("Error in getPost controller: ", error);
+  }
+};

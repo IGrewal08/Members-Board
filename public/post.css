@@ -1,46 +1,52 @@
 #post_content {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 2rem;
 }
 
 #mainPost {
-    margin: 2rem 2rem;
-    padding: 1rem;
-    color: var(--header-footer-bgcolor);
-    background-color: var(--header-footer-ccolor);
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  margin: 2rem 2rem;
+  padding: 1rem;
+  color: var(--header-footer-bgcolor);
+  background-color: var(--header-footer-ccolor);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 #title {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 #options {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 #likes_svg {
-    display: flex;
-    font-size: 26px;
-    align-items: center;
+  display: flex;
+  font-size: 26px;
+  align-items: center;
+  background-color: var(--header-footer-ccolor);
+  border: none;
 }
 
 #likes_svg > svg {
-    width: 2rem;
-    height: auto;
+  width: 2rem;
+  height: auto;
+}
+
+#likes_svg > svg:hover > g > path {
+  fill: var(--like-selected-color);
 }
 
 #post_likes {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 #likes {
-    color: var(--header-footer-bgcolor);
+  color: var(--header-footer-bgcolor);
 }
 
 #addComment {
@@ -52,9 +58,9 @@
 }
 
 form {
-    display: flex;
-    align-self: center;
-    gap: 1rem;
+  display: flex;
+  align-self: center;
+  gap: 1rem;
 }
 
 form > button {
@@ -66,15 +72,33 @@ form > button {
 }
 
 form > button:hover {
-    background-color: var(--logout-hover-bgcolor);
-    color: var(--header-footer-ccolor);
+  background-color: var(--logout-hover-bgcolor);
+  color: var(--header-footer-ccolor);
 }
 
 #comments {
-    text-align: center;
-    margin: 0 2rem;
-    padding: 1rem;
-    color: var(--header-footer-bgcolor);
-    background-color: var(--header-footer-ccolor);
-    border-radius: 0.5rem;
+  text-align: center;
+  margin: 0 2rem;
+  padding: 1rem;
+  color: var(--header-footer-bgcolor);
+  background-color: var(--header-footer-ccolor);
+  border-radius: 0.5rem;
+}
+
+#comment {
+  border: 1px solid var(--outline-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#commentator {
+  display: flex;
+  justify-content: right;
+}
+
+#comment > #time {
+  display: flex;
+  justify-content: right;
 }
