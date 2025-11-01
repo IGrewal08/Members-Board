@@ -61,7 +61,7 @@ app.use("/", homeRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Error 500');
+  res.status(500).send("Error 500");
 });
 
 app.listen(3000, "localhost", (error) => {

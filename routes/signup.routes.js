@@ -27,29 +27,36 @@ const validateSignup = [
     .matches(/[\W_]/)
     .withMessage("Password must contain at least one special character"),
   body("confirmPassword")
-    .custom((value, { req }) => { return value === req.body.password })
+    .custom((value, { req }) => {
+      return value === req.body.password;
+    })
     .withMessage("Confirm Password and Password do not match"),
 ];
 
 signupRouter.get("/", (req, res) => res.render("signup"));
 
-signupRouter.post("/", [validateSignup, async (req, res, next) => {
-  const errors = validationResult(req);
+signupRouter.post("/", [
+  validateSignup,
+  async (req, res, next) => {
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors);
       return res.status(400).render("signup", {
-        errors: errors.array(),             /* TAKE THIS ARRAY AND DISPLAY ERROR MESSAGES NEXT TO INPUT */
+        errors: errors.array(),
       });
     }
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await pool.query("INSERT INTO users (email, username, password) VALUES ($1, $2, $3)", [req.body.email, req.body.username, hashedPassword])
-    res.redirect("/")
-  } catch (error) {
-    console.error(error);
-    /* go to error handler if user is trying to insert a already used email for a pre-existing username in the table (email and username must be unique)*/
-    next(error);
-  }
-}]);
+    try {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      await pool.query(
+        "INSERT INTO users (email, username, password) VALUES ($1, $2, $3)",
+        [req.body.email, req.body.username, hashedPassword]
+      );
+      res.redirect("/");
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  },
+]);
 
 export default signupRouter;

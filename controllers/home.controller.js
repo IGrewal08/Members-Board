@@ -44,9 +44,13 @@ export const getHome = async (req, res) => {
     LEFT JOIN comments USING (postid)
     GROUP BY postid
     `;
-  if (req.query.sort === "popular") { baseQuery += " ORDER BY num_of_comments DESC" }
-  else if (req.query.sort === "new") { baseQuery += " ORDER BY date_created DESC" }
-  else if (req.query.sort === "ml") { baseQuery += " ORDER BY likes DESC"}
+  if (req.query.sort === "popular") {
+    baseQuery += " ORDER BY num_of_comments DESC";
+  } else if (req.query.sort === "new") {
+    baseQuery += " ORDER BY date_created DESC";
+  } else if (req.query.sort === "ml") {
+    baseQuery += " ORDER BY likes DESC";
+  }
   const query = await pool.query(baseQuery);
   const now = new Date();
   try {
@@ -74,8 +78,7 @@ export const postPostForm = [
     if (!errors.isEmpty()) {
       console.log(errors);
       return res.status(400).render("postform", {
-        errors:
-          errors.array() /* TAKE THIS ARRAY AND DISPLAY ERROR MESSAGES NEXT TO INPUT */,
+        errors: errors.array(),
       });
     }
     try {
@@ -98,8 +101,7 @@ export const postComment = [
     if (!errors.isEmpty()) {
       console.log(errors);
       return res.status(400).render(`/post/${req.params.id}`, {
-        errors:
-          errors.array() /* TAKE THIS ARRAY AND DISPLAY ERROR MESSAGES NEXT TO INPUT */,
+        errors: errors.array(),
       });
     }
     try {
@@ -154,6 +156,7 @@ export const getLike = async (req, res, next) => {
 export const getPost = async (req, res) => {
   let likedPosts = [];
   let myPosts = [];
+  let likeValidationResponse;
   if (res.locals.currentUser) {
     const likedPostsResponse = await pool.query(
       `SELECT postid, title FROM posts
@@ -166,6 +169,12 @@ export const getPost = async (req, res) => {
       [res.locals.currentUser.userid]
     );
     myPosts = myPostsResponse.rows;
+
+    likeValidationResponse = await pool.query(
+      `SELECT * FROM post_likes WHERE userid = $1 AND postid = $2
+    `,
+      [res.locals.currentUser.userid, req.params.id]
+    );
   }
   const mainPost = await pool.query(
     `
@@ -184,12 +193,12 @@ export const getPost = async (req, res) => {
     `,
     [req.params.id]
   );
-  const likeValidationResponse = await pool.query(
-      `SELECT * FROM post_likes WHERE userid = $1 AND postid = $2
-    `,
-      [res.locals.currentUser.userid, req.params.id]
-    );
-  const condition = (likeValidationResponse != undefined && likeValidationResponse.rows.length != 0) ? "T" : "F";
+
+  const condition =
+    likeValidationResponse != undefined &&
+    likeValidationResponse.rows.length != 0
+      ? "T"
+      : "F";
   try {
     res.render("post", {
       condition: condition,

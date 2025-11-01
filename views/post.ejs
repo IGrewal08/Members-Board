@@ -28,7 +28,7 @@
             <% if (locals.currentUser) { %>
             <a id="likes_svg" href="/post/like/<%= condition %>/<%= post.postid %>">  
             <% } else { %>
-              <a id="likes_svg" href="#">
+              <a id="likes_svg">
             <% } %>
               <svg
                 viewBox="0 0 24 24"
@@ -50,9 +50,9 @@
               </svg>
               <div id="likes"><%= post.likes %></div>
             </a>
-            <h6>
+            <h5>
               Created: <%= post.date_created.getMonth() + 1 %>/<%= post.date_created.getDate() %>/<%= post.date_created.getFullYear() %>
-            </h6>
+            </h5>
           </div>
         </div>
         <% if (locals.currentUser) { %>

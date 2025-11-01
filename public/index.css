@@ -76,6 +76,10 @@ svg {
   font-family: var(--logo-font);
 }
 
+#logo:hover {
+  color: var(--login-hover-bgcolor);
+}
+
 #search {
   background-color: var(--search-bar-bgcolor);
   color: var(--header-footer-ccolor);
@@ -234,7 +238,7 @@ nav {
 }
 
 #time,
-h6 {
+h5 {
   font-family: var(--digital-font);
   color: var(--main-border-color);
 }
