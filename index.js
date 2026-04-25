@@ -64,9 +64,10 @@ app.use((err, req, res, next) => {
   res.status(500).send("Error 500");
 });
 
-app.listen(3000, "localhost", (error) => {
+const post = process.env.PORT || 3000;
+app.listen(post, "0.0.0.0", (error) => {
   if (error) {
     throw error;
   }
-  console.log("Express App listening on port 3000!");
+  console.log(`Express App listening on port ${post}!`);
 });

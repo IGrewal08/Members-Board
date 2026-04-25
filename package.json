@@ -1,11 +1,13 @@
 {
   "name": "members-board",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "now dockerize",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node index --watch"
+    "build": "node index --watch",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",

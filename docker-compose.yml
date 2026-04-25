@@ -1,0 +1,49 @@
+services:
+  # Container A: App
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_NAME}
+    depends_on:
+      - db
+    networks:
+      - members-net
+
+  # Container B: nginx
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ${PWD}/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - members-net
+
+  # Container C: Official Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # keep data if container stops
+      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - members-net
+
+networks:
+  members-net:
+    driver: bridge
+
+volumes:
+  postgres_data: 

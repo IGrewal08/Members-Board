@@ -48,7 +48,7 @@ INSERT INTO post_likes (userId, postId) VALUES (1, 1);
 async function main() {
   console.log("Seeding...");
   const client = new Client({
-    connectionString: `postgresql://${process.env.ROLE_NAME}@localhost:5432/${process.env.DATABASE_NAME}`,
+    connectionString: `${process.env.DATABASE_URL}`,
   });
   await client.connect();
   await client.query(create_tables);
